@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             }.distinctBy{it.url}.filter{it.matchScore>=prefs.minimumMatch}
             currentJobs=jobs
             lifecycleScope.launch{
-                withContext(Dispatchers.IO){db.jobDao().upsertAll(jobs.map{JobEntity(it.id,it.title,it.company,it.location,it.experience,it.salary,it.description,it.url,System.currentTimeMillis(),"NEW",it.matchScore,"","")})}
+                withContext(Dispatchers.IO){db.jobDao().upsertAll(jobs.map{val mr=matcher.match(profile,it);JobEntity(it.id,it.title,it.company,it.location,it.experience,it.salary,it.description,it.url,System.currentTimeMillis(),"NEW",it.matchScore,mr.matched.joinToString(","),mr.missing.joinToString(","))})}
                 adapter.submitList(jobs); jobsHeader.text="Jobs found: ${jobs.size} (match ≥ ${prefs.minimumMatch}%)"
                 status.text="Found ${jobs.size} matching jobs. Final application submission always requires your confirmation."
             }
