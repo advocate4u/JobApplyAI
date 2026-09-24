@@ -145,7 +145,8 @@ class MainActivity : AppCompatActivity() {
                             salary = it.salary,
                             description = it.description,
                             url = it.url,
-                            discoveredAt = System.currentTimeMillis()
+                            discoveredAt = System.currentTimeMillis(),
+                            matchScore = it.matchScore
                         )
                     })
                 }
