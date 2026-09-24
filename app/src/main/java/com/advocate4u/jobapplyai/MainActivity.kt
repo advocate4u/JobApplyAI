@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
 import android.content.pm.PackageManager
+import androidx.appcompat.app.AlertDialog
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,7 +14,6 @@ import android.webkit.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -85,8 +85,8 @@ class MainActivity : AppCompatActivity() {
         val q=q0.trim(); if(q.isBlank()){status.text="Enter a job title";return}
         prefs.keywords=q
         val slug=q.lowercase(Locale.US).replace(Regex("[^a-z0-9]+"),"-").trim('-')
-        val url="https://www.naukri.com/\${slug}-jobs?k=\${URLEncoder.encode(q,"UTF-8")}"
-        status.text="Opening Naukri search for \$q..."
+        val url="https://www.naukri.com/${slug}-jobs?k=${URLEncoder.encode(q,"UTF-8")}"
+        status.text="Opening Naukri search for $q..."
         webView.loadUrl(url)
     }
 
@@ -103,8 +103,8 @@ class MainActivity : AppCompatActivity() {
             currentJobs=jobs
             lifecycleScope.launch{
                 withContext(Dispatchers.IO){db.jobDao().upsertAll(jobs.map{JobEntity(it.id,it.title,it.company,it.location,it.experience,it.salary,it.description,it.url,System.currentTimeMillis(),"NEW",it.matchScore,"","")})}
-                adapter.submitList(jobs); jobsHeader.text="Jobs found: \${jobs.size} (match ≥ \${prefs.minimumMatch}%)"
-                status.text="Found \${jobs.size} matching jobs. Final application submission always requires your confirmation."
+                adapter.submitList(jobs); jobsHeader.text="Jobs found: ${jobs.size} (match ≥ ${prefs.minimumMatch}%)"
+                status.text="Found ${jobs.size} matching jobs. Final application submission always requires your confirmation."
             }
         }
     }
@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
             val existing=db.applicationDao().findByJobId(job.id)
             db.applicationDao().upsert(ApplicationEntity(existing?.id?:job.id,job.id,statusValue,System.currentTimeMillis(),existing?.note?:"",if(statusValue=="APPLIED")System.currentTimeMillis() else existing?.appliedAt))
         }
-        status.text="Marked \${statusValue}: \${job.title}"
+        status.text="Marked ${statusValue}: ${job.title}"
     }
 
     private fun showTrackerDialog(){
@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
             val apps=withContext(Dispatchers.IO){db.applicationDao().getAll()}
             if(apps.isEmpty()){Toast.makeText(this@MainActivity,"No applications tracked yet.",Toast.LENGTH_SHORT).show();return@launch}
             val jobs=withContext(Dispatchers.IO){db.jobDao().getAll().associateBy{it.id}}
-            val lines=apps.map{a->"\${a.status} • \${jobs[a.jobId]?.title?:"Unknown job"}"}
+            val lines=apps.map{a->"${a.status} • ${jobs[a.jobId]?.title?:"Unknown job"}"}
             AlertDialog.Builder(this@MainActivity).setTitle("Application tracker").setItems(lines.toTypedArray()){_,i->showStatusPicker(apps[i])}.setPositiveButton("Close",null).show()
         }
     }
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showMessage(job:Job){
         val name=if(prefs.name.isBlank())"Hiring Team" else prefs.name
-        val text="Hello, I am \$name. I am interested in \${job.title} at \${job.company}. My experience and skills align with the role. I would be happy to discuss my background and relevant experience."
+        val text="Hello, I am \$name. I am interested in ${job.title} at ${job.company}. My experience and skills align with the role. I would be happy to discuss my background and relevant experience."
         EditText(this).apply{setText(text);setSelectAllOnFocus(false);AlertDialog.Builder(this@MainActivity).setTitle("Application message").setView(this).setPositiveButton("Copy"){_,_->(getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager).setPrimaryClip(android.content.ClipData.newPlainText("Application message",text))}.setNegativeButton("Close",null).show()}
     }
 
@@ -180,6 +180,6 @@ class MainActivity : AppCompatActivity() {
         if(Build.VERSION.SDK_INT>=26)getSystemService(NotificationManager::class.java).createNotificationChannel(NotificationChannel("jobs","JobApply AI",NotificationManager.IMPORTANCE_DEFAULT))
     }
 
-    private fun stableId(url:String,fallback:Int)=if(url.isNotBlank())url.hashCode().toString() else "job-\${fallback}"
+    private fun stableId(url:String,fallback:Int)=if(url.isNotBlank())url.hashCode().toString() else "job-${fallback}"
     override fun onBackPressed(){if(webView.canGoBack())webView.goBack() else super.onBackPressed()}
 }
