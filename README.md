@@ -1,25 +1,21 @@
 # JobApply AI
 
-Android job-search assistant for user-controlled Naukri discovery.
+Android job-search and application assistant focused on user control.
 
-## Implemented
-- Naukri WebView with normal user login/session.
-- Keyword search.
-- Visible listing extraction and deduplication.
-- Room persistence.
-- Candidate profile skill set.
-- Deterministic job-to-profile match score.
-- Application status persistence foundation.
-- Original listing View / Apply handoff.
-- GitHub Actions debug APK workflow.
+## Current features
+- Naukri WebView with normal user sign-in/session.
+- Keyword search and visible job extraction with deduplication.
+- Candidate profile/preferences stored locally.
+- Skill and location matching with configurable minimum match.
+- Saved application statuses: SAVED, APPLIED, INTERVIEW, REJECTED, SKIPPED, FAILED, EXTERNAL.
+- Application tracker and status updates.
+- Application message generation and copy-to-clipboard.
+- Daily scheduled review notification through WorkManager.
+- Android 8+ (API 26), target API 35.
+- GitHub Actions debug APK build and artifact upload.
 
-## Roadmap
-- More resilient Naukri DOM adapters.
-- Editable profile/resume screen.
-- Saved searches and scheduled notifications.
-- Application dashboard with status transitions.
-- Assisted form filling.
-- Automated tests and release signing.
+## Safety and user control
+The app does not store a Naukri password, bypass CAPTCHA, evade anti-bot controls, fabricate experience, or silently submit applications. Final application submission remains a user action after reviewing the original listing.
 
-## Safety
-No password collection, CAPTCHA bypass, anti-bot evasion, rate-limit defeat, or fabricated application answers.
+## Limitations
+Naukri's page structure can change; extraction is intentionally limited to visible page content. Background scheduling notifies the user to review/search; it does not perform hidden browser automation while the app is closed. External-company applications open in the user's browser and are not silently submitted.
