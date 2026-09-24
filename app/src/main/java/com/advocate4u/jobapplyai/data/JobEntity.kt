@@ -13,5 +13,9 @@ data class JobEntity(
     val salary: String,
     val description: String,
     val url: String,
-    val discoveredAt: Long
+    val discoveredAt: Long,
+    val status: String = "NEW",
+    val matchScore: Int = 0,
+    val matchedSkills: String = "",
+    val missingSkills: String = ""
 )

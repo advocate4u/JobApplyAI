@@ -8,5 +8,6 @@ data class Job(
     val experience: String,
     val salary: String,
     val description: String,
-    val url: String
+    val url: String,
+    val matchScore: Int = 0
 )

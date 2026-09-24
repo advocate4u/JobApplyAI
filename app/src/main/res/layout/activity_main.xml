@@ -1,76 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingTop="14dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="6dp"
-        android:text="JobApply AI"
-        android:textSize="22sp"
-        android:textStyle="bold" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp">
-
-        <EditText
-            android:id="@+id/keyword"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Senior .NET Developer"
-            android:singleLine="true"
-            android:imeOptions="actionSearch" />
-
-        <Button
-            android:id="@+id/searchButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Search" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <TextView android:id="@+id/title" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="14dp" android:text="JobApply AI" android:textSize="22sp" android:textStyle="bold"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="8dp">
+        <EditText android:id="@+id/keyword" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Senior .NET Developer" android:singleLine="true"/>
+        <Button android:id="@+id/searchButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Search"/>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="6dp"
-        android:text="Open Naukri and sign in. Then search."
-        android:textSize="13sp" />
-
-    <WebView
-        android:id="@+id/naukriWebView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.9" />
-
-    <TextView
-        android:id="@+id/jobsHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="Jobs found: 0"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/jobsList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.1"
-        android:clipToPadding="false"
-        android:padding="8dp" />
-
+    <TextView android:id="@+id/status" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="8dp" android:text="Naukri opened. Sign in normally."/>
+    <WebView android:id="@+id/naukriWebView" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="0.8"/>
+    <TextView android:id="@+id/jobsHeader" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="8dp" android:text="Jobs found: 0" android:textStyle="bold"/>
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/jobsList" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1.2" android:padding="8dp"/>
 </LinearLayout>

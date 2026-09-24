@@ -12,4 +12,10 @@ interface JobDao {
 
     @Query("SELECT * FROM jobs ORDER BY discoveredAt DESC")
     suspend fun getAll(): List<JobEntity>
+
+    @Query("UPDATE jobs SET status = :status WHERE id = :id")
+    suspend fun setStatus(id: String, status: String)
+
+    @Query("SELECT * FROM jobs WHERE status = :status ORDER BY discoveredAt DESC")
+    suspend fun getByStatus(status: String): List<JobEntity>
 }

@@ -19,6 +19,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.advocate4u.jobapplyai.data.AppDatabase
 import com.advocate4u.jobapplyai.data.JobEntity
 import com.advocate4u.jobapplyai.model.Job
+import com.advocate4u.jobapplyai.model.CandidateProfile
+import com.advocate4u.jobapplyai.matching.JobMatcher
+import com.advocate4u.jobapplyai.model.CandidateProfile
+import com.advocate4u.jobapplyai.matching.JobMatcher
 import com.advocate4u.jobapplyai.naukri.NaukriJobExtractor
 import com.advocate4u.jobapplyai.ui.JobAdapter
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +38,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var keyword: EditText
     private lateinit var adapter: JobAdapter
     private val extractor = NaukriJobExtractor()
+    private val matcher = JobMatcher()
+    private val profile = CandidateProfile()
+    private val matcher = JobMatcher()
+    private val profile = CandidateProfile()
     private val db by lazy { AppDatabase.get(this) }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -119,7 +127,8 @@ class MainActivity : AppCompatActivity() {
                         experience = item["experience"].orEmpty(),
                         salary = item["salary"].orEmpty(),
                         description = item["description"].orEmpty(),
-                        url = item["url"].orEmpty()
+                        url = item["url"].orEmpty(),
+                        matchScore = matcher.match(profile, Job(stableId(item["url"].orEmpty(), index), item["title"].orEmpty(), item["company"].orEmpty(), item["location"].orEmpty(), item["experience"].orEmpty(), item["salary"].orEmpty(), item["description"].orEmpty(), item["url"].orEmpty())).score
                     )
                 }
                 .distinctBy { it.url }
@@ -136,7 +145,8 @@ class MainActivity : AppCompatActivity() {
                             salary = it.salary,
                             description = it.description,
                             url = it.url,
-                            discoveredAt = System.currentTimeMillis()
+                            discoveredAt = System.currentTimeMillis(),
+                            matchScore = it.matchScore
                         )
                     })
                 }
