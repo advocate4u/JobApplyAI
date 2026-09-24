@@ -27,8 +27,8 @@ class NaukriJobExtractor {
             })()
         """.trimIndent()
         webView.evaluateJavascript(script) { raw ->
-            val jsonText = raw.removePrefix(""").removeSuffix(""")
-                .replace("\"", """).replace("\\", "\")
+            val jsonText = raw.removePrefix("\"").removeSuffix("\"")
+                .replace("\\\"", "\"").replace("\\\\", "\\")
             val array = try { JSONArray(jsonText) } catch (_: Exception) { JSONArray() }
             val result = buildList {
                 for (i in 0 until array.length()) {
