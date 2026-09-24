@@ -62,11 +62,11 @@ class MainActivity : AppCompatActivity() {
         adapter=JobAdapter{job->showJobActions(job)}
         list.layoutManager=LinearLayoutManager(this); list.adapter=adapter
 
-        webView.settings.javaScriptEnabled=true; webView.settings.domStorageEnabled=true
+        webView.settings.javaScriptEnabled=true; webView.settings.domStorageEnabled=true; webView.settings.allowFileAccess=false; webView.settings.allowContentAccess=false; webView.settings.setSupportMultipleWindows(false)
         CookieManager.getInstance().setAcceptCookie(true); CookieManager.getInstance().setAcceptThirdPartyCookies(webView,true)
         webView.webChromeClient=WebChromeClient()
         webView.webViewClient=object:WebViewClient(){
-            override fun onPageFinished(view:WebView,url:String){status.text="Naukri loaded"; if(url.contains("naukri.com",true)) extractVisibleJobs()}
+            override fun onPageFinished(view:WebView,url:String){ status.text="Naukri loaded"; if(url.contains("naukri.com",true)) { view.postDelayed({ extractVisibleJobs() }, 900) } }
             override fun shouldOverrideUrlLoading(view:WebView,request:WebResourceRequest):Boolean{
                 if(request.url.toString().contains("naukri.com",true)) return false
                 startActivity(Intent(Intent.ACTION_VIEW,request.url)); return true
@@ -193,5 +193,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun stableId(url:String,fallback:Int)=if(url.isNotBlank())url.hashCode().toString() else "job-${fallback}"
+    override fun onDestroy(){ webView.stopLoading(); webView.destroy(); super.onDestroy() }
     override fun onBackPressed(){if(webView.canGoBack())webView.goBack() else super.onBackPressed()}
 }
