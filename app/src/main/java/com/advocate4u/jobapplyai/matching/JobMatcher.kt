@@ -8,7 +8,7 @@ class JobMatcher{
  fun match(profile:CandidateProfile,job:Job):MatchResult{
   val text="${job.title} ${job.description}".lowercase(Locale.US)
   val skills=profile.skills.filter{it.isNotBlank()}
-  val matched=skills.filter{aliases[it.lowercase(Locale.US)]?.any{text.contains(it)}?:text.contains(it.lowercase(Locale.US))}
+  val matched=skills.filter { skill ->\n    val key=skill.lowercase(Locale.US)\n    aliases[key]?.any { alias -> text.contains(alias) } ?: text.contains(key)\n  }
   val missing=skills.filterNot{it in matched}
   val skillScore=if(skills.isEmpty())100 else (matched.size*100/skills.size)
   val locationScore=if(profile.locations.isEmpty()||profile.locations.any{textContains(job.location,it}))100 else 0
