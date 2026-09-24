@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.advocate4u.jobapplyai.data.AppDatabase
 import com.advocate4u.jobapplyai.data.JobEntity
 import com.advocate4u.jobapplyai.model.Job
+import com.advocate4u.jobapplyai.model.CandidateProfile
+import com.advocate4u.jobapplyai.matching.JobMatcher
 import com.advocate4u.jobapplyai.naukri.NaukriJobExtractor
 import com.advocate4u.jobapplyai.ui.JobAdapter
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var keyword: EditText
     private lateinit var adapter: JobAdapter
     private val extractor = NaukriJobExtractor()
+    private val matcher = JobMatcher()
+    private val profile = CandidateProfile()
     private val db by lazy { AppDatabase.get(this) }
 
     @SuppressLint("SetJavaScriptEnabled")
