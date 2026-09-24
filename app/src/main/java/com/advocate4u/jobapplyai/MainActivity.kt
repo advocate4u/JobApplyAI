@@ -168,16 +168,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun showMessage(job:Job){
         val name=if(prefs.name.isBlank())"Hiring Team" else prefs.name
-        val text="Hello, I am \$name. I am interested in ${job.title} at ${job.company}. My experience and skills align with the role. I would be happy to discuss my background and relevant experience."
+        val text="Hello, I am $name. I am interested in ${job.title} at ${job.company}. My experience and skills align with the role. I would be happy to discuss my background and relevant experience."
         EditText(this).apply{setText(text);setSelectAllOnFocus(false);AlertDialog.Builder(this@MainActivity).setTitle("Application message").setView(this).setPositiveButton("Copy"){_,_->(getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager).setPrimaryClip(android.content.ClipData.newPlainText("Application message",text))}.setNegativeButton("Close",null).show()}
     }
 
 
     private fun showSavedSearches(){
-        val saved=prefs.savedSearches.split("\\n").map{it.trim()}.filter{it.isNotBlank()}.toMutableList()
+        val saved=prefs.savedSearches.split("\n").map{it.trim()}.filter{it.isNotBlank()}.toMutableList()
         val items=(listOf("Save current: ${prefs.keywords}")+saved).toTypedArray()
         AlertDialog.Builder(this).setTitle("Saved searches").setItems(items){_,i->
-            if(i==0){if(prefs.keywords.isNotBlank()&&!saved.contains(prefs.keywords)){saved.add(prefs.keywords);prefs.savedSearches=saved.joinToString("\\n");Toast.makeText(this,"Search saved",Toast.LENGTH_SHORT).show()}}
+            if(i==0){if(prefs.keywords.isNotBlank()&&!saved.contains(prefs.keywords)){saved.add(prefs.keywords);prefs.savedSearches=saved.joinToString("\n");Toast.makeText(this,"Search saved",Toast.LENGTH_SHORT).show()}}
             else {keyword.setText(saved[i-1]);searchNaukri(saved[i-1])}
         }.setNegativeButton("Close",null).show()
     }
