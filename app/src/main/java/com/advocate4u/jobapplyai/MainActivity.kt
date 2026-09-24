@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         val search=findViewById<Button>(R.id.searchButton)
         val profile=findViewById<Button>(R.id.profileButton)
         val tracker=findViewById<Button>(R.id.trackerButton)
+        val saved=findViewById<Button>(R.id.savedButton)
         val daily=findViewById<Switch>(R.id.dailySwitch)
         val minMatch=findViewById<EditText>(R.id.minMatch)
         val list=findViewById<RecyclerView>(R.id.jobsList)
@@ -74,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         search.setOnClickListener{prefs.keywords=keyword.text.toString(); prefs.minimumMatch=minMatch.text.toString().toIntOrNull()?:50; searchNaukri(keyword.text.toString())}
         profile.setOnClickListener{showProfileDialog()}
         tracker.setOnClickListener{showTrackerDialog()}
+        saved.setOnClickListener{showSavedSearches()}
         daily.setOnCheckedChangeListener{_,enabled->prefs.dailySearchEnabled=enabled; scheduleDailySearch(enabled)}
         webView.loadUrl("https://www.naukri.com/")
         createNotificationChannel()
@@ -156,10 +158,11 @@ class MainActivity : AppCompatActivity() {
         val box=LinearLayout(this); box.orientation=LinearLayout.VERTICAL; box.setPadding(32,16,32,8)
         fun field(hint:String,value:String):EditText=EditText(this).apply{this.hint=hint;setText(value)}
         val name=field("Name",prefs.name); val exp=field("Years experience",prefs.experience.toString()); val skills=field("Skills, comma separated",prefs.skills)
-        val loc=field("Preferred locations, comma separated",prefs.locations); val sal=field("Minimum salary LPA",prefs.minimumSalaryLpa.toString()); val notice=field("Notice period",prefs.noticePeriod)
-        listOf(name,exp,skills,loc,sal,notice).forEach{box.addView(it)}
+        val loc=field("Preferred locations, comma separated",prefs.locations); val sal=field("Minimum salary LPA",prefs.minimumSalaryLpa.toString()); val notice=field("Notice period",prefs.noticePeriod); val resume=field("Resume text (paste or import .txt)",prefs.resumeText)
+        resume.minLines=4
+        listOf(name,exp,skills,loc,sal,notice,resume).forEach{box.addView(it)}
         AlertDialog.Builder(this).setTitle("Candidate profile & preferences").setView(box).setNegativeButton("Cancel",null).setPositiveButton("Save"){_,_->
-            prefs.name=name.text.toString();prefs.experience=exp.text.toString().toIntOrNull()?:10;prefs.skills=skills.text.toString();prefs.locations=loc.text.toString();prefs.minimumSalaryLpa=sal.text.toString().toDoubleOrNull()?:0.0;prefs.noticePeriod=notice.text.toString()
+            prefs.name=name.text.toString();prefs.experience=exp.text.toString().toIntOrNull()?:10;prefs.skills=skills.text.toString();prefs.locations=loc.text.toString();prefs.minimumSalaryLpa=sal.text.toString().toDoubleOrNull()?:0.0;prefs.noticePeriod=notice.text.toString();prefs.resumeText=resume.text.toString()
         }.show()
     }
 
@@ -169,6 +172,15 @@ class MainActivity : AppCompatActivity() {
         EditText(this).apply{setText(text);setSelectAllOnFocus(false);AlertDialog.Builder(this@MainActivity).setTitle("Application message").setView(this).setPositiveButton("Copy"){_,_->(getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager).setPrimaryClip(android.content.ClipData.newPlainText("Application message",text))}.setNegativeButton("Close",null).show()}
     }
 
+
+    private fun showSavedSearches(){
+        val saved=prefs.savedSearches.split("\\n").map{it.trim()}.filter{it.isNotBlank()}.toMutableList()
+        val items=(listOf("Save current: ${prefs.keywords}")+saved).toTypedArray()
+        AlertDialog.Builder(this).setTitle("Saved searches").setItems(items){_,i->
+            if(i==0){if(prefs.keywords.isNotBlank()&&!saved.contains(prefs.keywords)){saved.add(prefs.keywords);prefs.savedSearches=saved.joinToString("\\n");Toast.makeText(this,"Search saved",Toast.LENGTH_SHORT).show()}}
+            else {keyword.setText(saved[i-1]);searchNaukri(saved[i-1])}
+        }.setNegativeButton("Close",null).show()
+    }
     private fun scheduleDailySearch(enabled:Boolean){
         val wm=WorkManager.getInstance(this)
         if(!enabled){wm.cancelUniqueWork("daily-job-search");return}
