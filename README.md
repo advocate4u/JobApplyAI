@@ -19,3 +19,7 @@ The app does not store a Naukri password, bypass CAPTCHA, evade anti-bot control
 
 ## Limitations
 Naukri's page structure can change; extraction is intentionally limited to visible page content. Background scheduling notifies the user to review/search; it does not perform hidden browser automation while the app is closed. External-company applications open in the user's browser and are not silently submitted.
+
+
+## Production status
+Version 1.2. Automated submission, CAPTCHA bypass and anti-bot evasion are intentionally not implemented. The app assists with discovery, matching, tracking and user-reviewed application preparation. APK installation still requires a successful CI build artifact or local Android build.
